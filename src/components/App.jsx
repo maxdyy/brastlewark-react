@@ -7,7 +7,10 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { allGnomesData: null };
+    this.state = {
+      allGnomesData: null,
+      searchFilter: "name"
+    };
   }
 
   componentDidMount() {
@@ -27,11 +30,37 @@ class App extends Component {
     getData();
   }
 
+  handleSearchFilter = searchFilter => {
+    this.setState({ searchFilter });
+  };
+
+  handleSearch = searchValue => {
+    const { searchFilter, allGnomesData } = this.state;
+    const { Brastlewark } = allGnomesData;
+
+    if (searchFilter === "name") {
+      const gnomes = Brastlewark.filter(gnome =>
+        gnome[searchFilter].toLowerCase().includes(searchValue.toLowerCase())
+      );
+      console.log(gnomes);
+    } else {
+      const gnomes = Brastlewark.filter(gnome =>
+        gnome[searchFilter].find(item =>
+          item.toLowerCase().includes(searchValue.toLowerCase())
+        )
+      );
+      console.log(gnomes);
+    }
+  };
+
   render() {
     return (
       <div className="bc-app">
         <div className="bc-app__wrapper">
-          <SearchBar />
+          <SearchBar
+            handleSearchFilter={this.handleSearchFilter}
+            handleSearch={this.handleSearch}
+          />
           <GnomeCard />
         </div>
       </div>
