@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import GnomeCard from "./GnomeCard";
+import Welcome from "./Welcome";
 import SearchBar from "./SearchBar";
+import DisplayGnomeCards from "./DisplayGnomeCards";
 import "../css/App.css";
 
 class App extends Component {
@@ -9,12 +10,15 @@ class App extends Component {
 
     this.state = {
       allGnomesData: null,
-      searchFilter: "name"
+      searchFilter: "name",
+      searchValue: null,
+      searchResult: [],
+      firstSearchOccurred: false
     };
   }
 
   componentDidMount() {
-    const getData = async () => {
+    const getBrastlewarkData = async () => {
       // Getting the data from the API
       const response = await fetch(
         "https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json"
@@ -24,10 +28,10 @@ class App extends Component {
       const json = await response.json();
 
       // Setting new data to the app state
-      this.setState({ allGnomesData: json });
+      this.setState({ allGnomesData: json.Brastlewark });
     };
 
-    getData();
+    getBrastlewarkData();
   }
 
   handleSearchFilter = searchFilter => {
@@ -35,33 +39,47 @@ class App extends Component {
   };
 
   handleSearch = searchValue => {
-    const { searchFilter, allGnomesData } = this.state;
-    const { Brastlewark } = allGnomesData;
+    const { searchFilter, allGnomesData, firstSearchOccurred } = this.state;
+    let foundGnomes = [];
 
     if (searchFilter === "name") {
-      const gnomes = Brastlewark.filter(gnome =>
+      foundGnomes = allGnomesData.filter(gnome =>
         gnome[searchFilter].toLowerCase().includes(searchValue.toLowerCase())
       );
-      console.log(gnomes);
     } else {
-      const gnomes = Brastlewark.filter(gnome =>
+      foundGnomes = allGnomesData.filter(gnome =>
         gnome[searchFilter].find(item =>
           item.toLowerCase().includes(searchValue.toLowerCase())
         )
       );
-      console.log(gnomes);
+    }
+
+    if (foundGnomes.length) {
+      this.setState({ searchResult: foundGnomes, firstSearchOccurred: true });
     }
   };
 
   render() {
+    const {
+      firstSearchOccurred,
+      allGnomesData,
+      searchValue,
+      searchResult
+    } = this.state;
+
     return (
       <div className="bc-app">
         <div className="bc-app__wrapper">
+          {!firstSearchOccurred ? <Welcome /> : null}
           <SearchBar
             handleSearchFilter={this.handleSearchFilter}
             handleSearch={this.handleSearch}
           />
-          <GnomeCard />
+          <DisplayGnomeCards
+            allGnomesData={allGnomesData}
+            searchValue={searchValue}
+            searchResult={searchResult}
+          />
         </div>
       </div>
     );
