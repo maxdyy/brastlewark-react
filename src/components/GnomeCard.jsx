@@ -5,9 +5,17 @@ import Description from "./Description";
 const { Meta } = Card;
 
 const GnomeCard = ({ data }) => {
-  const { thumbnail, name, professions, friends } = data;
+  const {
+    thumbnail,
+    name,
+    professions,
+    friends,
+    hair_color,
+    height,
+    weight
+  } = data;
 
-  const gnomeDescription = { professions, friends };
+  const gnomeDescription = { professions, friends, hair_color, height, weight };
 
   return (
     <Card
