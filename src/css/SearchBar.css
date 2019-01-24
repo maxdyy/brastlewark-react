@@ -1,3 +1,7 @@
 .bc-searchBar__wrapper {
   display: flex;
 }
+
+.bc-searchBar__select {
+  width: 135px;
+}

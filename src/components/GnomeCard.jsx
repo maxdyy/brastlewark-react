@@ -1,22 +1,14 @@
 import React from "react";
 import { Card } from "antd";
+import Description from "./Description";
 
 const { Meta } = Card;
 
 const GnomeCard = ({ data }) => {
   const { thumbnail, name, professions, friends } = data;
-  const description = (professions, friends) => (
-    <div>
-      <div>
-        <span>Professions: </span>
-        <span>{professions.join(", ")}</span>
-      </div>
-      <div>
-        <span>Friends: </span>
-        <span>{friends.join(", ")}</span>
-      </div>
-    </div>
-  );
+
+  const gnomeDescription = { professions, friends };
+
   return (
     <Card
       className="bc-app__gnome-cards__card"
@@ -29,7 +21,10 @@ const GnomeCard = ({ data }) => {
         />
       }
     >
-      <Meta title={name} description={description(professions, friends)} />
+      <Meta
+        title={name}
+        description={<Description info={gnomeDescription} />}
+      />
     </Card>
   );
 };
