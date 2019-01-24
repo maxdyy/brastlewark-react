@@ -1,0 +1,8 @@
+.bc-app__gnome-cards__card__description__row {
+  margin: 10px 0;
+}
+
+.bc-app__gnome-cards__card__description--bold {
+  font-weight: 400;
+  color: rgb(70, 70, 70);
+}

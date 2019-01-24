@@ -1,22 +1,25 @@
 import React from "react";
 import GnomeCard from "./GnomeCard";
+import Error from "./Error";
 import "../css/DisplayGnomeCards.css";
 
-const createGnomeCards = (allGnomesData, searchValue, searchResult) => {
-  if (searchResult.length) {
+const createGnomeCards = (searchValue, searchResult) => {
+  if (
+    !searchValue ||
+    !searchResult.length ||
+    (searchValue && !searchResult.length)
+  ) {
+    return <Error message="No Gnomes Found, try again!" />;
+  } else if (searchResult.length) {
     return searchResult.map(gnome => <GnomeCard data={gnome} key={gnome.id} />);
-  } else if ((searchValue && !searchResult.length) || !searchResult.length) {
-    return <div>No Gnomes Found, try again!</div>;
   } else {
-    return allGnomesData
-      .slice(0, 4)
-      .map(gnome => <GnomeCard data={gnome} key={gnome.id} />);
+    return null;
   }
 };
 
-const DisplayGnomeCards = ({ allGnomesData, searchValue, searchResult }) => (
+const DisplayGnomeCards = ({ searchValue, searchResult }) => (
   <div className="bc-app__gnome-cards__wrapper">
-    {createGnomeCards(allGnomesData, searchValue, searchResult)}
+    {createGnomeCards(searchValue, searchResult)}
   </div>
 );
 

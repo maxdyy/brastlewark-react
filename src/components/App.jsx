@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Welcome from "./Welcome";
 import SearchBar from "./SearchBar";
 import DisplayGnomeCards from "./DisplayGnomeCards";
+import Error from "./Error";
 import "../css/App.css";
 
 class App extends Component {
@@ -13,7 +14,8 @@ class App extends Component {
       searchFilter: "name",
       searchValue: null,
       searchResult: [],
-      firstSearchOccurred: false
+      firstSearchOccurred: false,
+      noData: false
     };
   }
 
@@ -39,7 +41,13 @@ class App extends Component {
   };
 
   handleSearch = searchValue => {
-    const { searchFilter, allGnomesData, firstSearchOccurred } = this.state;
+    const { searchFilter, allGnomesData } = this.state;
+
+    if (!allGnomesData) {
+      this.setState({ noData: true });
+      return;
+    }
+
     let foundGnomes = [];
 
     if (searchFilter === "name") {
@@ -54,9 +62,12 @@ class App extends Component {
       );
     }
 
-    if (foundGnomes.length) {
-      this.setState({ searchResult: foundGnomes, firstSearchOccurred: true });
-    }
+    this.setState({
+      searchValue,
+      searchResult: foundGnomes,
+      firstSearchOccurred: true,
+      noData: false
+    });
   };
 
   render() {
@@ -64,7 +75,8 @@ class App extends Component {
       firstSearchOccurred,
       allGnomesData,
       searchValue,
-      searchResult
+      searchResult,
+      noData
     } = this.state;
 
     return (
@@ -75,11 +87,16 @@ class App extends Component {
             handleSearchFilter={this.handleSearchFilter}
             handleSearch={this.handleSearch}
           />
-          <DisplayGnomeCards
-            allGnomesData={allGnomesData}
-            searchValue={searchValue}
-            searchResult={searchResult}
-          />
+          {!firstSearchOccurred ? null : (
+            <DisplayGnomeCards
+              allGnomesData={allGnomesData}
+              searchValue={searchValue}
+              searchResult={searchResult}
+            />
+          )}
+          {noData ? (
+            <Error message="Ops, your connection is down! Try later..." />
+          ) : null}
         </div>
       </div>
     );
